@@ -5,6 +5,10 @@
 ##### h5 Heading
 ###### h6 Heading
 
+## Enter text and escape special characters
+
+Enter text as usual. Line break and extra spaces are ignored. Escape special 
+characters with back slash \* \% \`.
 
 ## Horizontal Rules
 
