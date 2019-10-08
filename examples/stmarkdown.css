@@ -73,11 +73,12 @@ dd { margin: 0 0 0 2em; }
 img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
 
 table { 
- width: 80%;
+ width: 95%;
  border-collapse: collapse; 
  border-spacing: 0; 
  border-right-style:0; 
  empty-cells: hide;
+ border-top: 1pt solid black;
  border-bottom: 1pt solid black;
 }
 
@@ -89,14 +90,13 @@ caption {
 }
 
 th {
-	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	font: bold "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	color: #4f6b72;
 	border-bottom: 1px solid #C1DAD7;
 	border-top: 1px solid #C1DAD7;
 	letter-spacing: 2px;
-	text-align: center;
-	padding: 6px 6px 6px 12px;
-	background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+	text-align: left;
+	padding: 6px;
 }
 
 th.nobg {
@@ -105,8 +105,9 @@ th.nobg {
 }
 
 td {
-	border-bottom: 0;
-    text-align: center;
+    border-bottom: 0;
+    text-align: left;
+    padding: 6px;
 }
 
 
