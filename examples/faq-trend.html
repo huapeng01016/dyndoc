@@ -1,0 +1,771 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="stmarkdown.css">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+</head>
+<body>
+<div class="faqnote">
+  This question was originally posed on <a href="http://www.statalist.org/">Statalist</a>
+  and answered by several users and StataCorp’s Bill Sribney.
+  Bill’s answer, with slight editing, appears below.
+</div>
+
+<h2> Does Stata provide a test for trend? </h2>
+
+<table class="faqtitle">
+  <tbody><tr>
+    <td>
+	Title
+    </td>
+    <td rowspan="3">&nbsp;</td>
+    <td>
+	A comparison of different tests for trend
+    </td>
+  </tr>
+  <tr>
+    <td>
+	Author
+    </td>
+    <td>
+	William Sribney, StataCorp
+    </td>
+  </tr>
+<!--
+  <tr>
+    <td>
+	Date
+    </td>
+    <td>
+	March 1996; minor revisions May 2015
+    </td>
+  </tr>
+-->
+</tbody></table>
+
+<hr>
+
+<p>
+  Let me make a bunch of comments comparing SAS PROC FREQ, Pearson’s
+  correlation, Patrick Royston’s <b>ptrend</b> command, linear
+  regression, logit/probit regression, Stata’s
+  <a href="/manuals/rvwls.pdf" class="cmd">vwls</a> command, and
+  Stata’s
+  <a href="/manuals/rnptrend.pdf" class="cmd">nptrend</a> command.
+
+</p><h3>Tests for trend in 2 x r tables</h3>
+
+<p>
+  Let me use Les Kalish’s example:
+</p>
+
+<pre class="new-output">                  Outcome 
+<table><tbody><tr>
+<td></td><td></td><td colspan="6" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>  </td><td>group </td><td class="vertline" style="width: 1px;"></td><td>   Good </td><td class="vertline"> </td><td> Better </td><td class="vertline"> </td><td>  Best </td>
+</tr><tr>
+<td>  </td><td>  y_i </td><td class="vertline" style="width: 1px;"></td><td>   a_1=1</td><td class="vertline"> </td><td>  a_2=2 </td><td class="vertline"> </td><td>  a_3=3</td>
+</tr><tr>
+<td>  </td><td class="horzline"> </td><td class="cross" style="width: 1px;"></td><td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td>
+</tr><tr>
+<td>  </td><td>      </td><td class="vertline" style="width: 1px;"></td><td>        </td><td class="vertline"> </td><td>        </td><td class="vertline"> </td><td> </td>
+</tr><tr>
+<td>  </td><td> y_1=0</td><td class="vertline" style="width: 1px;"></td><td>   19   </td><td class="vertline"> </td><td>   31   </td><td class="vertline"> </td><td>   67</td>
+</tr><tr>
+<td>  </td><td>      </td><td class="vertline" style="width: 1px;"></td><td>   n_11 </td><td class="vertline"> </td><td>   n_12 </td><td class="vertline"> </td><td>   n_13</td>
+</tr><tr>
+<td>  </td><td>      </td><td class="vertline" style="width: 1px;"></td><td>        </td><td class="vertline"> </td><td>        </td><td class="vertline"> </td><td> </td>
+</tr><tr>
+<td>  </td><td> y_2=1</td><td class="vertline" style="width: 1px;"></td><td>    1   </td><td class="vertline"> </td><td>    5   </td><td class="vertline"> </td><td>   21</td>
+</tr><tr>
+<td>  </td><td>      </td><td class="vertline" style="width: 1px;"></td><td>   n_21 </td><td class="vertline"> </td><td>   n_22 </td><td class="vertline"> </td><td>   n_23</td>
+</tr><tr>
+<td>  </td><td>      </td><td class="vertline" style="width: 1px;"></td><td>        </td><td class="vertline"> </td><td>        </td><td class="vertline"> </td><td> </td>
+</tr><tr>
+<td></td><td colspan="7" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table>            20       36       88
+            n_+1     n_+2     n_+3
+</pre>
+
+<h3>PROC FREQ</h3>
+
+<p>
+  When I used SAS in grad school to analyze these data, we used
+</p>
+
+<pre class="new-output"><b>    PR0C FREQ DATA=...
+         TABLES GROUP*OUTCOME / CHISQ CMH SCORES=TABLE
+</b></pre>
+
+<p>
+  The test statistic was shown on the output as 
+</p>
+
+<pre class="new-output"><table><tbody><tr>
+<td>                              </td><td> DF</td><td>     </td><td>Value</td><td>     </td><td> Prob</td>
+</tr><tr>
+<td>                              </td><td class="horzline"> </td><td>     </td><td class="horzline"> </td><td>     </td><td class="horzline"> </td>
+</tr><tr>
+<td>Mantel-Haenszel Chi-Square    </td><td>  1</td><td>     </td><td>4.515</td><td>     </td><td>0.034</td>
+</tr></tbody></table></pre>
+
+<p>
+  The test statistic is not a Mantel–Haenszel—at least not
+  according to what I learned a Mantel–Haenszel statistic is (from Gary
+  Koch at UNC—note that any errors here, I should add, are those of this
+  student, not of this great researcher/teacher).
+</p>
+
+<p>
+  Dr. Koch called this chi-squared statistic Qs, where s stands for score.
+</p>
+
+<h3>Chi-squared statistic for trend Qs</h3>
+
+<p>
+ Let me express Qs in terms of a simpler statistic, T:
+</p>
+
+<pre class="new-output">T = (sum over group i)(sum over outcome j) n<sub>ij</sub> * a<sub>j</sub> * y<sub>i</sub>
+</pre>
+
+<p>
+  The a<sub>j</sub> are scores; here 1, 2, 3, but there can be other choices
+  for the scores (I’ll get to this later).
+</p>
+
+<p>
+  Under the null hypothesis there is no association between group and outcome,
+  so we can consider the permutation (i.e., randomization) distribution of T.
+  That is, we fix the margins of the table, just as we do for Fisher’s
+  exact test, and then consider all the possible permutations that give these
+  same marginal counts.
+</p>
+
+<p>
+  Under this null hypothesis permutation distribution, it is easy to see that
+  the mean of T is
+</p>
+
+
+<pre class="new-output">E(T) = N * a_bar * y_bar
+</pre>
+
+<p>
+  where a_bar is the weighted average of a<sub>j</sub> (using the marginal
+  counts n<sub>+j</sub>):
+</p>
+
+
+<pre class="new-output">a_bar = (sum over j) n<sub>+j</sub> * a<sub>j</sub> / N
+</pre>
+
+<p>
+  Similarly, y_bar is a weighted average of y<sub>i</sub>.
+</p>
+
+<p>
+  The variance of T, under the permutation distribution, is (exactly)
+</p>
+
+<pre class="new-output">V(T) = (N - 1) * S<sub>a</sub><sup>2</sup> * S<sub>y</sub><sup>2</sup>
+</pre>
+
+<p>
+  where S<sub>a</sub><sup>2</sup> is the standard deviation squared for
+  a<sub>j</sub>:
+</p>
+
+<pre class="new-output">S<sub>a</sub><sup>2</sup> = (1/(N-1)) * (sum over j) n<sub>+j</sub> * (a<sub>j</sub> - a_bar)<sup>2</sup>
+</pre>
+
+<p>
+  We can compute a chi-squared statistic:
+</p>
+
+<pre class="new-output">Qs = (T - E(T))<sup>2</sup> / V(T)
+</pre>
+
+<p>
+  If you look at the formula for Qs, you see something interesting.  It is
+  simply
+</p>
+
+<pre class="new-output">Qs = (N - 1) * r<sub>ay</sub><sup>2</sup>
+</pre>
+
+<p>
+  where r<sub>ay</sub> is Pearson’s correlation coefficient for a and y.
+</p>
+
+<h3>Just Pearson’s correlation</h3>
+
+<p>
+  This “test of trend” is nothing more than Pearson’s
+  correlation coefficient.
+</p>
+
+<p>
+  Let’s try this.
+</p>
+
+<pre class="new-output"><b>. list</b>
+<table><tbody><tr>
+<td></td><td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>     </td><td class="vertline" style="width: 1px;"></td><td> y   a   weight </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td class="vertline" style="width: 1px;"></td><td class="horzline"> </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  1. </td><td class="vertline" style="width: 1px;"></td><td> 0   1       19 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  2. </td><td class="vertline" style="width: 1px;"></td><td> 0   2       31 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  3. </td><td class="vertline" style="width: 1px;"></td><td> 0   3       67 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  4. </td><td class="vertline" style="width: 1px;"></td><td> 1   1        1 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  5. </td><td class="vertline" style="width: 1px;"></td><td> 1   2        5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td class="vertline" style="width: 1px;"></td><td class="horzline"> </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  6. </td><td class="vertline" style="width: 1px;"></td><td> 1   3       21 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table>    
+<b>. corr y a [fw=weight]</b>
+(obs=144)
+<table><tbody><tr>
+<td>             </td><td class="vertline"> </td><td>        y        a</td>
+</tr><tr>
+<td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td>
+</tr><tr>
+<td>           y </td><td class="vertline"> </td><td>   1.0000</td>
+</tr><tr>
+<td>           a </td><td class="vertline"> </td><td>   0.1777   1.0000</td>
+</tr></tbody></table>
+
+<b>. return list</b>
+
+scalars:
+                  r(N) =  144
+                r(rho) =  .1776868721791401
+
+matrices:
+                  r(C) :  2 x 2
+
+
+<b>. display (r(N)-1)*r(rho)^2</b>
+4.5148853
+</pre>
+
+<p>
+   PROC FREQ gave chi-squared = 4.515.
+</p>
+
+<h3>Royston’s <b>ptrend</b> and the Cochran–Armitage test</h3>
+
+<p>
+  Let’s now use Patrick Royston’s <b>ptrend</b> command.
+  Patrick posted his <b>ptrend</b> command on Statalist.  The data must look
+  like the following for this command:
+</p>
+
+<pre class="new-output"><b>. list</b>
+<table><tbody><tr>    
+<td></td><td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>     </td><td class="vertline" style="width: 1px;"></td><td> a   n1   n2 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td class="vertline" style="width: 1px;"></td><td class="horzline"> </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  1. </td><td class="vertline" style="width: 1px;"></td><td> 1   19    1 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  2. </td><td class="vertline" style="width: 1px;"></td><td> 2   31    5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  3. </td><td class="vertline" style="width: 1px;"></td><td> 3   67   21 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table>
+<b>. ptrend n1 n2 a</b>
+
+            n1         n2       _prop          a  
+  1.        19          1       0.950          1  
+  2.        31          5       0.861          2  
+  3.        67         21       0.761          3  
+
+Trend analysis for proportions
+
+Regression of p = n1/(n1+n2) on a:
+Slope = -.09553, std. error =   .0448, Z =   2.132
+
+Overall chi2(2) =         4.551,  pr&gt;chi2 = 0.1027
+Chi2(1) for trend =       4.546,  pr&gt;chi2 = 0.0330
+Chi2(1) for departure =   0.004,  pr&gt;chi2 = 0.9467
+</pre>
+
+<p>
+  The “Chi2(1) for trend” is slightly different.  It’s 4.546
+  rather than 4.515.
+</p>
+
+<p>
+  Well, <b>ptrend</b> is just using N rather than N − 1 in the formula:
+</p>
+
+
+<pre class="new-output">Qtrend = Chi2(1) for trend = N * r<sub>ay</sub><sup>2</sup>
+</pre>
+
+<p>
+  Let’s go back to data arranged for the <b>corr</b> computation and show this.
+</p>
+
+<pre class="new-output"><b>. quietly corr y a [fw=weight]
+    
+. display r(N)*r(rho)^2</b>
+4.5464579
+</pre>
+
+<p>
+  Qtrend is just Pearson’s correlation again.  A regression is performed
+  here to compute the slope, and the test of slope = 0 is given by the Qtrend
+  statistic.  This is just the relationship between Pearson’s
+  correlation and regression.
+</p>
+
+<p>
+  Qdeparture (="Chi2(1) for departure" as Royston’s output nicely labels
+  it) is the statistic for the Cochran–Armitage test.  But Qtrend and
+  Qdeparture are usually performed at the same time, so lumping them together
+  under the name “Cochran–Armitage” is sometimes loosely
+  done.
+</p>
+
+<p>
+  The null hypothesis for the Cochran–Armitage test is that the trend is
+  linear, and the test is for “departures” from linearity; i.e.,
+  it’s simply a goodness-of-fit test for the linear model.
+</p>
+
+<p>
+  Qs (or equivalently Qtrend) tests the null hypothesis of no association.
+  Since it’s just a Pearson’s correlation, we know that it’s
+  powerful against alternative hypotheses of monotonic trend, but it’s
+  not at all powerful against curvilinear (or other) associations with a 0
+  linear component.
+</p>
+
+<h3>Model it</h3>
+
+<p>
+  Rich Goldstein recommended logistic regression.  Regression is certainly a
+  better context to understand what you are doing—rather than all these
+  chi-squared tests that are simply Pearson’s correlations or
+  goodness-of-fit tests under another name.  Since Pearson’s correlation
+  is equivalent to a regression of y on “a”, why not just do the
+  regression
+</p>
+
+<pre class="new-output"><b>. regress y a [fw=weight]</b>
+<table><tbody><tr>
+<td>      Source </td><td class="vertline"> </td><td>       SS       df       MS   </td><td>           Number of obs =     144</td>
+</tr><tr>
+<td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td><td>           F(  1,   142) =    4.63</td>
+</tr><tr>
+<td>       Model </td><td class="vertline"> </td><td>  .692624451     1  .692624451</td><td>           Prob &gt; F      =  0.0331</td>
+</tr><tr>
+<td>    Residual </td><td class="vertline"> </td><td>  21.2448755   142    .1496118</td><td>           R-squared     =  0.0316</td>
+</tr><tr>
+<td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td><td>           Adj R-squared =  0.0248</td>
+</tr><tr>
+<td>       Total </td><td class="vertline"> </td><td>     21.9375   143  .153409091</td><td>           Root MSE      =   .3868</td>
+</tr></tbody></table>
+<table><tbody><tr>
+<td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>           y </td><td class="vertline"> </td><td>      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]</td>
+</tr><tr>
+<td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td>
+</tr><tr>
+<td>           a </td><td class="vertline"> </td><td>   .0955344   .0444011     2.15   0.033     .0077618     .183307</td>
+</tr><tr>
+<td>       _cons </td><td class="vertline"> </td><td>  -.0486823   .1144041    -0.43   0.671    -.2748375     .177473</td>
+</tr><tr>
+<td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table></pre>
+
+<p>
+  But recall that y is a 0/1 variable.  Heck, wouldn’t you be laughed at
+  by your colleagues if you presented this result?  They’d say,
+  “Don’t ya know anything, you dummy, you should be using
+  logit/probit for a 0/1 dependent variable!” But call these same
+  results a “chi-squared test for linear trend” and, oh wow,
+  instant respectability.  Your colleagues walk away thinking how smart you
+  are and jealous about all those special statistical tests you know.
+</p>
+
+<p>
+  I guess it sounds as if I’m agreeing fully with Rich Goldstein’s
+  recommendation for logit (or probit, which Rich didn’t mention).
+  I’ll say some redeeming things about Pearson’s correlation (hey,
+  let’s call it what it really is) below, but for now, let me give you
+  another modeling alternative.
+</p>
+
+<h3>Try the vwls command</h3>
+
+<p>
+  One can do a little better using the command 
+  <a href="/manuals/rvwls.pdf" class="cmd">vwls</a> 
+  (variance-weighted least squares) in Stata rather than 
+  <a href="/manuals/rregress.pdf" class="cmd">regress</a>
+</p>
+
+<pre class="new-output"><b>. vwls y a [fw=weight]</b>
+    
+Variance-weighted least-squares regression           Number of obs   =     144
+Goodness-of-fit chi2(1)    =    0.01                 Model chi2(1)   =    7.79
+Prob &gt; chi2                =  0.9359                 Prob &gt; chi2     =  0.0053
+<table><tbody><tr>
+<td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>           y </td><td class="vertline"> </td><td>      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]</td>
+</tr><tr>
+<td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td>
+</tr><tr>
+<td>           a </td><td class="vertline"> </td><td>   .0944406   .0338345     2.79   0.005     .0281261     .160755</td>
+</tr><tr>
+<td>       _cons </td><td class="vertline"> </td><td>  -.0459275   .0758028    -0.61   0.545    -.1944984    .1026433</td>
+</tr><tr>
+<td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table></pre>
+
+<p>
+  The “test for linear trend” is again the test of the coefficient
+  of a = 0.  It also gives you a goodness-of-fit test.  The linear model is
+  the same as <b>regress</b>, but the weighting is a little different.  The
+  weights are 1/Var(y|a).  Now
+</p>
+
+<pre>	Var(y|a<sub>j</sub>) = p<sub>j</sub> * (1 - p<sub>j</sub>) / n<sub>+j</sub>
+</pre>
+
+<p>
+  where p<sub>j</sub> = n<sub>2j</sub> / n<sub>+j</sub> (recall n<sub>2j</sub>
+  = #(y=1) for outcome j).
+</p>
+
+<p>
+  Essentially, this means you are downweighting (relative to
+  <b>regress</b>) points a<sub>j</sub> that have p<sub>j</sub> close to 0 or
+  1.  <b>regress</b> with weights n<sub>ij</sub> puts too much weight on these
+  points.
+</p>
+
+<p>
+  If you are determined to fit a linear model for y vs. a<sub>j</sub>, I
+  believe <b>vwls</b> is a better way to do it.
+</p>
+
+<p>
+  <b>vwls</b> can do more.  y can be a continuous variable, too.  The
+  regressors x1, x2, x3, ... can be any variables as long as for each unique
+  value of the combination of x1, x2, x3, ... there are enough points to
+  reasonably estimate the variance of y.  For example, Gary Koch had us using
+  this to model y = # of colds versus x = 1 (drug) or 0 (placebo).
+</p>
+
+<p>
+  You can do the equivalent of <b>vwls</b> in SAS using PROC CATMOD with a
+  RESPONSE MEAN option.
+</p>
+
+<h3>Using different scores a<sub>j</sub>:  a<sub>j</sub> = average ranks</h3>
+
+<p>
+  As I said above, the scores a<sub>j</sub> are simply a regressor variable,
+  and we can use anything we want for them.
+</p>
+
+<p>
+  Let’s revisit Les’s little dataset:
+</p>
+
+<pre class="new-output">                Outcome 
+<table><tbody><tr>
+<td></td><td colspan="6" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>group </td><td class="vertline" style="width: 1px;"></td><td>  Good  </td><td class="vertline"> </td><td> Better </td><td class="vertline"> </td><td>  Best </td>
+</tr><tr>
+<td>  y_i </td><td class="vertline" style="width: 1px;"></td><td>  a_1=1 </td><td class="vertline"> </td><td>  a_2=2 </td><td class="vertline"> </td><td>  a_3=3</td>
+</tr><tr>
+<td class="horzline"> </td><td class="vertline" style="width: 1px;"></td><td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td>
+</tr><tr>
+<td>      </td><td class="vertline" style="width: 1px;"></td><td>        </td><td class="vertline"> </td><td>        </td><td class="vertline"> </td><td> </td>
+</tr><tr>
+<td>y_1=0 </td><td class="vertline" style="width: 1px;"></td><td>   19   </td><td class="vertline"> </td><td>   31   </td><td class="vertline"> </td><td>    67</td>
+</tr><tr>
+<td>      </td><td class="vertline" style="width: 1px;"></td><td>   n_11 </td><td class="vertline"> </td><td>   n_12 </td><td class="vertline"> </td><td>    n_13</td>
+</tr><tr>
+<td>      </td><td class="vertline" style="width: 1px;"></td><td>        </td><td class="vertline"> </td><td>        </td><td class="vertline"> </td><td> </td>
+</tr><tr>
+<td>y_2=1 </td><td class="vertline" style="width: 1px;"></td><td>    1   </td><td class="vertline"> </td><td>    5   </td><td class="vertline"> </td><td>    21</td>
+</tr><tr>
+<td>      </td><td class="vertline" style="width: 1px;"></td><td>   n_21 </td><td class="vertline"> </td><td>   n_22 </td><td class="vertline"> </td><td>    n_23</td>
+</tr><tr>
+<td>      </td><td class="vertline" style="width: 1px;"></td><td>        </td><td class="vertline"> </td><td>        </td><td class="vertline"> </td><td> </td>
+</tr><tr>
+<td colspan="7" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table>          20       36        88
+          n_+1     n_+2      n_+3
+
+ranks   1-20     21-56    57-144
+
+sum of
+ranks    210      1386      8844
+
+average
+rank     10.5     38.5    100.5
+</pre>
+
+<p>
+  Let’s now use the average ranks instead of a<sub>j</sub>.  
+</p>
+
+<p>
+  Call these scores r<sub>j</sub>.  Let’s compute Pearson’s
+  coefficient for y and r<sub>j</sub>.
+</p>
+
+
+<pre class="new-output"><b>. list</b>
+<table><tbody><tr>
+<td></td><td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr><tr>
+<td>     </td><td class="vertline" style="width: 1px;"></td><td> y   a   weight       r </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td class="vertline" style="width: 1px;"></td><td class="horzline"> </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  1. </td><td class="vertline" style="width: 1px;"></td><td> 0   1       19    10.5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  2. </td><td class="vertline" style="width: 1px;"></td><td> 0   2       31    38.5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  3. </td><td class="vertline" style="width: 1px;"></td><td> 0   3       67   100.5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  4. </td><td class="vertline" style="width: 1px;"></td><td> 1   1        1    10.5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  5. </td><td class="vertline" style="width: 1px;"></td><td> 1   2        5    38.5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td class="vertline" style="width: 1px;"></td><td class="horzline"> </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td>  6. </td><td class="vertline" style="width: 1px;"></td><td> 1   3       21   100.5 </td><td class="vertline" style="width: 1px;"></td>
+</tr><tr>
+<td></td><td colspan="3" class="horzline" style="height: 1px;"></td>
+</tr></tbody></table>
+
+<b>. corr y r [fw=w]</b>
+(obs=144)
+<table><tbody><tr>
+<td>             </td><td class="vertline"> </td><td>        y        r</td>
+</tr><tr>
+<td class="horzline"> </td><td class="cross"> </td><td class="horzline"> </td>
+</tr><tr>
+<td>           y </td><td class="vertline"> </td><td>   1.0000</td>
+</tr><tr>
+<td>           r </td><td class="vertline"> </td><td>   0.1755   1.0000</td>
+</tr></tbody></table>
+
+<b>. display (r(N)-1)*r(rho)^2</b>
+4.4063138
+</pre>
+
+<p>
+  The above is our chi-squared test statistic for Pearson’s correlation
+  coefficient, which Gary Koch called Qs.
+</p>
+
+<p>
+  This is exactly what 
+  <a href="/manuals/rnptrend.pdf" class="cmd">nptrend</a>
+  is doing.  <b>nptrend</b> is again Pearson’s correlation coefficient
+  by another name.
+</p>
+
+<p>
+  <b>nptrend</b>, unfortunately, does not allow weights, so we must expand the
+  data:
+</p>
+
+<pre class="new-output"><b>. expand weight</b>
+(138 observations created)
+
+<b>. nptrend a, by(y)</b>
+
+         y     score       obs      sum of ranks
+         0         0       117        8126.5
+         1         1        27        2313.5
+
+          z  =  2.10
+  Prob &gt; |z| =  0.036
+
+
+<b>. ret list</b>
+
+scalars:
+                 r(p) =  .0358061342131948
+                 r(z) =  2.099122151413003
+                 r(T) =  2313.5
+                 r(N) =  144
+
+<b>. display r(z)^2</b>
+4.4063138
+</pre>
+
+<p>
+  Voila, the same answer!
+
+</p><p>
+  <b>nptrend</b> takes the variable given after the command—here
+  “a”—and computes the average ranks for it just as we did.
+  It then correlates the average ranks with the values in y.
+</p>
+
+<p>
+  In SAS, if you specify SCORES=MODRIDIT, the scores used are the average
+  ranks.  PROC FREQ with SCORES=MODRIDIT should give exactly what
+  <b>nptrend</b> produces.
+</p>
+
+<h3>More on nptrend: r x c tables</h3>
+
+<p>
+  <b>nptrend</b> allows y to be anything.  If y is 0, 1, 2, then we are doing
+  Pearson’s correlation in 3 x 3 tables.
+</p>
+
+<p>
+  <b>nptrend a, by(y)</b> allows you to substitute different values (i.e.,
+  scores) for y:  when you specify the <b>score(</b><i>scorevar</i><b>)</b>
+  option on <b>nptrend</b>, it uses the values of <i>scorevar</i> in place of
+  the values of y in computing the correlation coefficient.
+</p>
+
+<p>
+  <b>nptrend</b> always uses averaged ranks for the scores for the
+  “a” variable.
+</p>
+
+<p>
+  This is a little confusing.  Remember, we are simply computing <b>corr y
+  x</b>.  y can be anything, and x can be anything in theory.  But
+  <b>nptrend</b> is restrictive; it allows any values for y but only allows x
+  to be averaged ranks.
+</p>
+
+<p>
+  There are other ways to do r x c tables.  We do not have to assume an
+  ordering on r.  If we don’t, guess what we get.  ANCOVA!  The scores
+  for the outcome “a” are the “continuous” variable.
+  We can model different slopes per block r.  Test slopes = 0 with a
+  chi-squared stat, give it a fancy name, and no one will know we are just
+  doing ANCOVA!
+</p>
+
+<h3>Stratified 2 x c tables</h3>
+
+<p>
+  Generalizing the above analysis to stratified 2 x c tables gives what I
+  learned as the “Extended Mantel–Haenszel” test.  Rothman
+  calls it the “Mantel extension test” and then says it can
+  be done with or without strata.  Yes, it can be done with or without strata,
+  but in the terminology I know, it’s only called the Extended
+  Mantel–Haenszel test only when there are strata.  Thanks, Ken, for
+  adding yet another name for unstratified 2 x c tables!
+</p>
+
+<p>
+  Say, the test for stratified tables is NOT just Pearson’s correlation
+  coefficient in disguise.  First, define, as we did before, the statistic
+</p>
+
+
+<pre class="new-output">T<sub>h</sub> = (sum over group i)(sum over outcome j) n<sub>hij</sub> * a<sub>hj</sub> * y<sub>hi</sub>
+</pre>
+
+<p>
+  for each stratum h.  Then form the statistic T by summing over strata.
+  Sometimes the sum is weighted by stratum totals, sometimes strata are
+  equally weighted.  (I believe that SAS does the former; Rothman gives the
+  formula for the latter.)  Since the strata are independent, the mean and
+  variance of T are easy to compute from T<sub>h</sub>.
+</p>
+
+<h3>Distribution of Pearson’s correlation coefficient</h3>
+
+<p>
+  I said that Qs = (N − 1) * r<sub>ay</sub><sup>2</sup> (where
+  r<sub>ay</sub> is Pearson’s correlation coefficient) had a chi-squared
+  distribution.  And one can use this to get a <i>p</i>-value for
+  Pearson’s correlation coefficient.  But this isn’t what <a href="/manuals/rcorrelate.pdf"><b>pwcorr</b></a>
+  does.  <b>pwcorr</b> is using a t distribution to get a <i>p</i>-value
+  (which assumes normality of "a" and y).  These are asymptotically equivalent
+  procedures (under the null hypothesis).
+</p>
+
+<p>
+  Qs is a second-moment approximation for the permutation distribution for
+  r<sub>ay</sub>.  The permutation distribution for r<sub>ay</sub> makes no
+  assumptions about "a" and y.
+</p>
+
+<p>
+  If you want to get fussy about getting <i>p</i>-values, then one should
+  compute the permutation distribution or compute higher-moment terms for the
+  permutation distribution for r<sub>ay</sub>.
+</p>
+
+<p>
+  For small N, Pearson’s correlation coefficient has an advantage over
+  logistic regression.  One can compute the permutation distribution of
+  Pearson’s correlation coefficient exactly.  For the exact
+  distribution, true type I error is equal to nominal type I error.  Such
+  won’t be the case for logistic.  Also, I bet it’s more
+  powerful than logistic for small N.  One could do some simulations and look
+  at this—it’s a good master’s paper project, perhaps.  This
+  is the case where Pearson’s correlation coefficient
+  is a better choice than logistic regression or other regression modeling.
+</p>
+
+<h3>Tests for trend in Stata</h3>
+
+<p>
+  Clearly, we need a command to do r x c tables, stratified and unstratified,
+  with various choices of scores.
+
+</p><p>
+  We plan to implement something in the future.  But, in the meantime, for
+  moderate to large N, there is logit/probit regression (and <b>vwls</b>).  If
+  you do want Qs for linear scores, it’s easy to use <a href="/manuals/rcorrelate.pdf"><b>corr</b></a> as
+  I’ve done here.  One can also use
+  <a href="/manuals/ststrate.pdf"><b>stmh</b></a>, 
+  <a href="/manuals/ststrate.pdf"><b>stmc</b></a>, 
+  and <a href="/manuals/repitab.pdf"><b>tabodds</b></a>.
+</p>
+
+<p>
+  For average-rank scores, it’s not too difficult to compute the average
+  ranks yourself and then use <b>corr</b>.
+</p>
+
+<p>
+  For stratified tables, there’s nothing easy available I know of.
+</p>
+</body>
+</html>
