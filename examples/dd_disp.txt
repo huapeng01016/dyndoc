@@ -1,0 +1,15 @@
+<<dd_version: 2>>
+
+This is a summary of **price** variable in Stata's auto dataset. 
+<<dd_do: quietly>>
+sysuse auto, clear
+summarize price
+local mean : display %5.0f r(mean)
+local max : display %5.0f r(max)
+local min : display %5.0f r(min)
+local sum = r(sum)
+local rn = r(N)
+<</dd_do>>
+
+Variable **price** has min <<dd_display:`min'>>, max <<dd_display:`max'>>, mean <<dd_display:`mean'>>, and average <<dd_display: %5.2f `sum'/`rn'>>.
+  

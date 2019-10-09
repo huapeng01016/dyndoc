@@ -1,0 +1,4 @@
+
+This is a summary of **price** variable in Stata's auto dataset. 
+
+Variable **price** has min 3291, max 15906, mean 6165, and average 6165.26.
