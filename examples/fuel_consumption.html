@@ -21,7 +21,7 @@
 . label variable fuel &quot;Fuel consumption (Gallons per 100 Miles)&quot;
 
 </code></pre>
-<p>We use Gallons per 100 Mile which is a better measurement than Miles per Gallon. Going from a 10 Miles per Gallon car to a 20 Miles per Gallon car saves 5 Gallons per 100 Miles when Miles per Gallon increases 10. Going from a 20 Miles per Gallon car to a 40 Miles per Gallon car <em>only</em> saves 2.5 Gallons per 100 Miles when Miles per Gallon increases 20.</p>
+<p>Gallons per 100 Mile is a better measurement than Miles per Gallon. Going from a 10 Miles per Gallon car to a 20 Miles per Gallon car saves 5 Gallons per 100 Miles when Miles per Gallon increases 10. Going from a 20 Miles per Gallon car to a 40 Miles per Gallon car <em>only</em> saves 2.5 Gallons per 100 Miles when Miles per Gallon increases 20.</p>
 <h2><a href="#examine-the-variables" id="examine-the-variables">Examine the variables</a></h2>
 <p>We examine variables for possible errors in the data.</p>
 <pre><code>. describe fuel weight
@@ -86,22 +86,6 @@ weight          int     %8.0gc                Weight (lbs.)
 
 . estimates store model2
 
-. estimates table model1 model2, b(%7.4f) stats(N r2_a) star
-
-----------------------------------------
-    Variable |   model1       model2    
--------------+--------------------------
-      weight |  0.0014***    0.0013***  
-  gear_ratio |  0.1706      -0.3367     
-        turn |  0.0243       0.0613     
-     foreign |               0.8650***  
-       _cons | -0.5814      -0.4661     
--------------+--------------------------
-           N |      74           74     
-        r2_a |  0.7218       0.7637     
-----------------------------------------
-legend: * p&lt;0.05; ** p&lt;0.01; *** p&lt;0.001
-
 </code></pre>
 <p>. estimates table model1 model2, varlabel b(%7.4f) stats(N r2_a) star markdown</p>
 <table>
@@ -126,9 +110,9 @@ legend: * p&lt;0.05; ** p&lt;0.01; *** p&lt;0.001
 . eststo : quietly regress fuel weight gear turn foreign
 (est2 stored)
 
-. esttab using esttab_ex.html, label   /// 
-&gt;         width(80%) nogaps                ///
-&gt;         mtitles(&quot;Model 1&quot; &quot;Model 2&quot;)       ///
+. esttab using esttab_ex.html, label             /// 
+&gt;         width(80%) nogaps                      /// 
+&gt;         mtitles(&quot;Model 1&quot; &quot;Model 2&quot;)           /// 
 &gt;         title(Regression table using -esttab-) 
 (output written to esttab_ex.html)
 

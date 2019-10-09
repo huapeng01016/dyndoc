@@ -41,8 +41,8 @@ label variable fuel "Fuel consumption (Gallons per 100 Miles)"
 <</dd_do>>
 ~~~~
 
-We use Gallons per 100 Mile which is a better measurement than 
-Miles per Gallon. Going from a 10 Miles per Gallon car to a 20 Miles per Gallon 
+Gallons per 100 Mile is a better measurement than Miles per Gallon. Going 
+from a 10 Miles per Gallon car to a 20 Miles per Gallon 
 car saves 5 Gallons per 100 Miles when Miles per Gallon increases 10. Going 
 from a 20 Miles per Gallon car to a 40 Miles per Gallon car *only* saves 2.5 Gallons 
 per 100 Miles when Miles per Gallon increases 20.      
@@ -109,7 +109,6 @@ quietly regress fuel weight gear turn
 estimates store model1
 quietly regress fuel weight gear turn foreign
 estimates store model2
-estimates table model1 model2, b(%7.4f) stats(N r2_a) star
 <</dd_do>>
 ~~~~
 
@@ -128,9 +127,9 @@ eststo clear
 <<dd_do>>
 eststo : quietly regress fuel weight gear turn
 eststo : quietly regress fuel weight gear turn foreign
-esttab using esttab_ex.html, label   /// 
-	width(80%) nogaps                ///
-	mtitles("Model 1" "Model 2")       ///
+esttab using esttab_ex.html, label             /// 
+	width(80%) nogaps                      /// 
+	mtitles("Model 1" "Model 2")           /// 
 	title(Regression table using -esttab-) 
 <</dd_do>>
 ~~~~~
@@ -144,4 +143,3 @@ cap erase esttab_ex.html
 The community-contributed **esttab** is available on the Boston College Statistical 
 Software Components (SSC) archive; see [ssc install](https://www.stata.com/support/ssc-installation/) 
 for details.
-

@@ -96,7 +96,7 @@ th {
 	border-top: 1px solid #C1DAD7;
 	letter-spacing: 2px;
 	text-align: left;
-	padding: 6px;
+	padding: 2px 6px 2px 6px;
 }
 
 th.nobg {
@@ -107,7 +107,7 @@ th.nobg {
 td {
     border-bottom: 0;
     text-align: left;
-    padding: 6px;
+    padding: 2px 6px 2px 6px;
 }
 
 
