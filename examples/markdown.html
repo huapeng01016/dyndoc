@@ -1,9 +1,25 @@
-<h1><a href="#h1-heading-8-" id="h1-heading-8-">h1 Heading 8-)</a></h1>
+<h1><a href="#h1-heading" id="h1-heading">h1 Heading</a></h1>
 <h2><a href="#h2-heading" id="h2-heading">h2 Heading</a></h2>
 <h3><a href="#h3-heading" id="h3-heading">h3 Heading</a></h3>
 <h4><a href="#h4-heading" id="h4-heading">h4 Heading</a></h4>
 <h5><a href="#h5-heading" id="h5-heading">h5 Heading</a></h5>
 <h6><a href="#h6-heading" id="h6-heading">h6 Heading</a></h6>
+<h2><a href="#code" id="code">Code</a></h2>
+<p>Block code &ldquo;fences&rdquo;</p>
+<pre><code class="language-stata">sysuse auto
+summarize weight
+regress mpg weight
+</code></pre>
+<p>Inline <code>display &quot;Hello World!&quot;</code></p>
+<p>Indented code</p>
+<pre><code>// Some comments
+int foo() {
+    int a = 1;
+    int b;
+    b = a*2;
+    return(b);
+}
+</code></pre>
 <h2><a href="#enter-text-and-escape-special-characters" id="enter-text-and-escape-special-characters">Enter text and escape special characters</a></h2>
 <p>Enter text as usual. Line break and extra spaces are ignored. Escape special characters with back slash * % `.</p>
 <h2><a href="#horizontal-rules" id="horizontal-rules">Horizontal Rules</a></h2>
@@ -55,23 +71,6 @@
 <li>foo</li>
 <li>bar</li>
 </ol>
-<h2><a href="#code" id="code">Code</a></h2>
-<p>Inline <code>code</code></p>
-<p>Indented code</p>
-<pre><code>// Some comments
-line 1 of code
-line 2 of code
-line 3 of code
-</code></pre>
-<p>Block code &ldquo;fences&rdquo;</p>
-<pre><code>Sample text here...
-</code></pre>
-<pre><code class="language-js">var foo = function (bar) {
-  return bar++;
-};
-
-console.log(foo(5));
-</code></pre>
 <h2><a href="#tables" id="tables">Tables</a></h2>
 <table>
 <thead>
@@ -106,12 +105,11 @@ console.log(foo(5));
 <tr><td align="left" colspan="2"> total:             </td><td align="right"> <strong>13h</strong> </td></tr>
 </tbody>
 </table>
-<h2><a href="#links" id="links">Links</a></h2>
-<p><a href="http://dev.nodeca.com">link text</a></p>
-<p><a href="http://nodeca.github.io/pica/demo/" title="title text!">link with title</a></p>
-<p>Autoconverted link <a href="https://github.com/nodeca/pica">https://github.com/nodeca/pica</a> (enable linkify to see)</p>
 <h2><a href="#images" id="images">Images</a></h2>
 <p><img src="https://octodex.github.com/images/minion.png" alt="Minion" /> <img src="https://octodex.github.com/images/stormtroopocat.jpg" alt="Stormtroopocat" title="The Stormtroopocat" /></p>
 <p>Like links, Images also have a footnote style syntax</p>
 <p><img src="https://octodex.github.com/images/dojocat.jpg" alt="Alt text" title="The Dojocat" /></p>
 <p>With a reference later in the document defining the URL location:</p>
+<h2><a href="#links" id="links">Links</a></h2>
+<p><a href="https://daringfireball.net/projects/markdown/">Markdown reference</a></p>
+<p><a href="https://github.com/vsch/flexmark-java" title="Flexmark!">Flexmark</a></p>

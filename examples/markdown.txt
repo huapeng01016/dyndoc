@@ -1,9 +1,32 @@
-# h1 Heading 8-)
+# h1 Heading 
 ## h2 Heading
 ### h3 Heading
 #### h4 Heading
 ##### h5 Heading
 ###### h6 Heading
+
+## Code
+
+Block code "fences"
+
+``` stata
+sysuse auto
+summarize weight
+regress mpg weight
+```
+
+Inline `display "Hello World!"`
+
+Indented code
+
+    // Some comments
+    int foo() {
+        int a = 1;
+        int b;
+        b = a*2;
+        return(b);
+    }
+
 
 ## Enter text and escape special characters
 
@@ -68,31 +91,6 @@ Start numbering with offset:
 1. bar
 
 
-## Code
-
-Inline `code`
-
-Indented code
-
-    // Some comments
-    line 1 of code
-    line 2 of code
-    line 3 of code
-
-
-Block code "fences"
-
-```
-Sample text here...
-```
-
-``` js
-var foo = function (bar) {
-  return bar++;
-};
-
-console.log(foo(5));
-```
 
 ## Tables
 
@@ -119,14 +117,6 @@ Multi-column cells
 | nov. 7. mon | 10:20 |  4h 20m |
 | total:             || **13h** |
 
-## Links
-
-[link text](http://dev.nodeca.com)
-
-[link with title](http://nodeca.github.io/pica/demo/ "title text!")
-
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
-
 
 ## Images
 
@@ -140,4 +130,11 @@ Like links, Images also have a footnote style syntax
 With a reference later in the document defining the URL location:
 
 [id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
+
+## Links
+
+[Markdown reference](https://daringfireball.net/projects/markdown/)
+
+[Flexmark](https://github.com/vsch/flexmark-java "Flexmark!")
+
 
