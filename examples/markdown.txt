@@ -1,9 +1,7 @@
-# h1 Heading 
-## h2 Heading
-### h3 Heading
-#### h4 Heading
-##### h5 Heading
-###### h6 Heading
+# h1 Stata 16
+## h2 Python integration
+### h3 Reproducible reporting
+#### h4 Lasso
 
 ## Code
 
@@ -15,7 +13,9 @@ summarize weight
 regress mpg weight
 ```
 
-Inline `display "Hello World!"`
+In-line `display "Hello World!"`
+
+Use double open tick to escape tick mark ``display "`hello_macro'"``
 
 Indented code
 
@@ -33,108 +33,75 @@ Indented code
 Enter text as usual. Line break and extra spaces are ignored. Escape special 
 characters with back slash \* \% \`.
 
-## Horizontal Rules
-
-___
-
----
-
-***
-
 
 ## Emphasis
 
-**This is bold text**
+**Stata is fast**
 
-__This is bold text__
+*Stata is easy to learn*
 
-*This is italic text*
+***Stata is fast and easy to learn***
 
-_This is italic text_
-
-~~Strikethrough~~
+Stata ~~10~~ 16 MP version supports up to 120,000 variables.
 
 
-## Blockquotes
+## Block quotes
 
-
-> Blockquotes can also be nested...
->> ...by using additional greater-than signs right next to each other...
-> > > ...or with spaces between arrows.
+> Why Stata?
+>
+> Fast. Accurate. Easy to use. Stata is a complete, integrated software package that 
+provides all your data science needs—data manipulation, visualization, statistics, 
+and reproducible reporting.
 
 
 ## Lists
 
 Unordered
 
-+ Create a list by starting a line with `+`, `-`, or `*`
-+ Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    * Ac tristique libero volutpat at
-    + Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-+ Very easy!
+* Master your data
+* Broad suite of statistical features
+* Truly reproducible reporting
+    * Dynamic Markdown documents
+    * Create Word documents
+    * Create PDF documents
+    * Create Excel files
+    * Schemes for graphics
+    * Word, HTML, PDF, Excel, SVG, PNG  
+* Truly reproducible research
+* Real documentation
 
 Ordered
 
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
-
-
-1. You can use sequential numbers...
-1. ...or keep all the numbers as `1.`
-
-Start numbering with offset:
-
-57. foo
-1. bar
-
+1. Stata/MP
+2. Stata/SE
+3. Stata/IC
 
 
 ## Tables
 
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
 
-Right aligned columns
-
-| Option | Description |
-| ------:| -----------:|
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
-
-Multi-column cells
-
-| day         | time  |   spent |
-|:------------|:-----:|--------:|
-| nov. 2. tue | 10:00 |  4h 40m |
-| nov. 3. thu | 11:00 |      4h |
-| nov. 7. mon | 10:20 |  4h 20m |
-| total:             || **13h** |
+| Make and Model         | Price  |  Mileage | Weight (lbs.) |
+|:-----------------------|:------:|---------:|--------------:|
+| AMC Concord            |4,099   | 22       | 2,930         | 
+| AMC Pacer              |4,749   | 17       | 3,350         |
+| AMC Spirit             |3,799   | 22       | 2,640         |
+| Buick Century          |4,816   | 20       | 3,250         |
+| Buick Electra          |7,827   | 15       | 4,080         |
+| Averge Weight:         |||                  **3,250**      |
 
 
 ## Images
 
-![Minion](https://octodex.github.com/images/minion.png)
-![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
+![contour](https://www.stata.com/includes/contimages/contour_plot.gif "contour")
+![gift ideas][ermistatas]
 
-Like links, Images also have a footnote style syntax
-
-![Alt text][id]
-
-With a reference later in the document defining the URL location:
-
-[id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
 
 ## Links
 
 [Markdown reference](https://daringfireball.net/projects/markdown/)
 
 [Flexmark](https://github.com/vsch/flexmark-java "Flexmark!")
+
+[ermistatas]: https://www.stata.com/giftshop/tshirtermxt.png  "The ERM monster"
 
 
