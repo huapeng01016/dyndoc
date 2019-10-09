@@ -1,0 +1,27 @@
+<<dd_version: 2>>
+
+This is a summary of Stata's auto dataset. 
+
+<<dd_do>>
+sysuse auto, clear
+describe
+<</dd_do>>
+
+You may use the following attributes to modify the tag's behavior. 
+
+* quietly        - suppress all output
+* nocommand      - suppress printing of command
+* nooutput       - suppress command output
+* noprompt       - suppress the dot prompt
+
+<<dd_do: quietly>>
+summarize price if foreign
+local mean_for : display %5.0f r(mean)
+summarize price if !foreign
+local mean_dom : display %5.0f r(mean)
+<</dd_do>>
+
+<<dd_do: nocommand>>
+di " - Mean price for foreign cars  : `mean_for'"
+di " - Mean price for domestic cars : `mean_dom'"
+<</dd_do>>

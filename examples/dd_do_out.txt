@@ -1,0 +1,44 @@
+
+. sysuse auto, clear
+(1978 Automobile Data)
+
+. generate fuel = 100/mpg
+
+. label variable fuel "Fuel consumption (Gallons per 100 Miles)"
+
+. regress fuel weight
+
+      Source |       SS           df       MS      Number of obs   =        74
+-------------+----------------------------------   F(1, 72)        =    194.71
+       Model |  87.2964969         1  87.2964969   Prob > F        =    0.0000
+    Residual |  32.2797639        72  .448330054   R-squared       =    0.7300
+-------------+----------------------------------   Adj R-squared   =    0.7263
+       Total |  119.576261        73  1.63803097   Root MSE        =    .66957
+
+------------------------------------------------------------------------------
+        fuel |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      weight |    .001407   .0001008    13.95   0.000      .001206    .0016081
+       _cons |   .7707669   .3142571     2.45   0.017     .1443069    1.397227
+------------------------------------------------------------------------------
+
+
+You may use the following attributes to modify the tag's behavior. 
+
+* quietly        - suppress all output
+* nocommand      - ssuppress printing of command
+* nooutput       - suppress command output
+* noprompt       - suppress the dot prompt
+
+
+| Make and Model  | Price   | Mileage (mpg) |
+
+|:----------------|--------:|--------------:|
+
+| AMC Concord  |  4099  |  22 |
+| AMC Pacer  |  4749  |  17 |
+| AMC Spirit  |  3799  |  22 |
+| Buick Century  |  4816  |  20 |
+| Buick Electra  |  7827  |  15 |
+
+
