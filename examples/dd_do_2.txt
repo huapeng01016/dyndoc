@@ -1,0 +1,34 @@
+<<dd_version: 2>>
+
+<<dd_do>>
+sysuse auto, clear
+generate fuel = 100/mpg
+label variable fuel "Fuel consumption (Gallons per 100 Miles)"
+regress fuel weight
+<</dd_do>>
+
+You may use the following attributes to modify the tag's behavior. 
+
+* quietly        - suppress all output
+* nocommand      - ssuppress printing of command
+* nooutput       - suppress command output
+* noprompt       - suppress the dot prompt
+
+<<dd_do: quietly>>
+assert fuel > 0 & fuel < .
+<</dd_do>>
+
+<<dd_do: nocommand>>
+di "| Make and Model  | Price   | Mileage (mpg) |"
+di "|:----------------|--------:|--------------:|"
+forval i=1/5 {
+	di "|", _continue
+	di make[`i'], _continue
+	di " | ", _continue
+	di price[`i'], _continue
+	di " | ", _continue
+	di mpg[`i'], _continue
+	di "|"
+}
+<</dd_do>>
+

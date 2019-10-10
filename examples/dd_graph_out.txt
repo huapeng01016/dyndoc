@@ -1,0 +1,31 @@
+Date: 10 Oct 2019
+ 
+For Stata graph, using dd_graph to export the graph and include the location 
+of the exported file in the document
+
+. sysuse auto, clear
+(1978 Automobile Data)
+
+. scatter mpg price
+
+
+1. 
+In the simplest case, no atrributes need be specified, export graph type is 
+set to SVG, file name is automatically constructed, and a HTML link to the file 
+is included  
+
+<img src="Graph.svg" >
+
+2. 
+We may change the export type, file name, type of link using various attributes
+
+![](Graph.png)
+
+uses PNG as export type and include a markdown link to the file.
+
+3. 
+
+c:/stata/napa/talk/dyndoc/examples/Graph.ps
+
+uses PS as export type and include the absolute path of the file, this is 
+often necessary if the link is used in a LaTeX file.

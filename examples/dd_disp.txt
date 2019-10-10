@@ -1,6 +1,7 @@
 <<dd_version: 2>>
+Date: <<dd_display: "`c(current_date)'">>
 
-This is a summary of **price** variable in Stata's auto dataset. 
+This is a summary of the **price** variable in Stata's auto dataset. 
 <<dd_do: quietly>>
 sysuse auto, clear
 summarize price

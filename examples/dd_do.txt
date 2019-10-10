@@ -1,34 +1,26 @@
 <<dd_version: 2>>
 
+This is a summary of Stata's auto dataset. 
+
 <<dd_do>>
 sysuse auto, clear
-generate fuel = 100/mpg
-label variable fuel "Fuel consumption (Gallons per 100 Miles)"
-regress fuel weight
+describe
 <</dd_do>>
-
+<<dd_remove>>
 You may use the following attributes to modify the tag's behavior. 
 
-* quietly        - suppress all output
-* nocommand      - ssuppress printing of command
-* nooutput       - suppress command output
-* noprompt       - suppress the dot prompt
-
+	quietly        - suppress all output
+	nocommand      - suppress printing of command
+	nooutput       - suppress command output
+	noprompt       - suppress the dot prompt
+<</dd_remove>>
 <<dd_do: quietly>>
-assert fuel > 0 & fuel < .
+summarize price if foreign
+local mean_for : display %5.0f r(mean)
+summarize price if !foreign
+local mean_dom : display %5.0f r(mean)
 <</dd_do>>
-
 <<dd_do: nocommand>>
-di "| Make and Model  | Price   | Mileage (mpg) |"
-di "|:----------------|--------:|--------------:|"
-forval i=1/5 {
-	di "|", _continue
-	di make[`i'], _continue
-	di " | ", _continue
-	di price[`i'], _continue
-	di " | ", _continue
-	di mpg[`i'], _continue
-	di "|"
-}
+di " - Mean price for foreign cars  : `mean_for'"
+di " - Mean price for domestic cars : `mean_dom'"
 <</dd_do>>
-
