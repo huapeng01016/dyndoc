@@ -1,12 +1,16 @@
 <<dd_version: 2>>
 
-We can process certain part of the dynamic document based on conditions.
+We can pass argumnets to the dynamic documents just like do-files. 
 
 <<dd_do>>
-local percent 20
+if "`0'" != "" {
+	local 0 ", `0'"
+	syntax [, percent(integer 100)]
+	display "`percent'"
+}
 <</dd_do>>
 
-<<dd_if: "`percent'"=="20">>
+<<dd_if:("`percent'"=="20")>>
 If local macro percent is 20, we use auto_20.dta, which is a 20 percent 
 sample of the auto dataset.
 
