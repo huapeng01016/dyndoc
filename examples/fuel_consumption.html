@@ -1,12 +1,6 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="stmarkdown.css">
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-</script>
-<script type="text/javascript" async
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
-</script>
 </head>
 <h1><a href="#a-fuel-consumption-study-of-statas-auto-dataset" id="a-fuel-consumption-study-of-statas-auto-dataset">A fuel consumption study of Stata&rsquo;s auto dataset</a></h1>
 <p>We conduct a study of the fuel consumption of cars in Stata&rsquo;s auto dataset.</p>
@@ -43,6 +37,7 @@ weight          int     %8.0gc                Weight (lbs.)
 </code></pre>
 <p>The variable <strong>weight</strong> has minimum value 1760.00, maximum value 4840.00, and range 3080.00.</p>
 <h2><a href="#plot-fuel-consumption-and-vehicle-weight" id="plot-fuel-consumption-and-vehicle-weight">Plot fuel consumption and vehicle weight</a></h2>
+<p>The graph is produced with  Daniel Bischof&rsquo;s <em>538</em> scheme.</p>
 <pre><code>. twoway lfitci fuel weight || scatter fuel weight, mcolor(%20) scheme(538)
 
 </code></pre>
@@ -103,42 +98,11 @@ weight          int     %8.0gc                Weight (lbs.)
 </tbody>
 </table>
 <p>legend: * p&lt;0.05; ** p&lt;0.01; *** p&lt;0.001</p>
-<h2><a href="#produce-a-table-from-community-contributed-esttab" id="produce-a-table-from-community-contributed-esttab">Produce a table from community-contributed <strong>esttab</strong></a></h2>
-<pre><code>. eststo : quietly regress fuel weight gear turn
-(est1 stored)
-
-. eststo : quietly regress fuel weight gear turn foreign
-(est2 stored)
-
-. esttab using esttab_ex.html, label             /// 
-&gt;         width(80%) nogaps                      /// 
-&gt;         mtitles(&quot;Model 1&quot; &quot;Model 2&quot;)           /// 
-&gt;         title(Regression table using -esttab-) 
-(output written to esttab_ex.html)
-
-</code></pre>
-<table border="0" width="80%">
-<caption>Regression table using -esttab-</caption>
-<tr><td colspan=3><hr></td></tr>
-<tr><td>                    </td><td>         (1)              </td><td>         (2)              </td></tr>
-<tr><td>                    </td><td>     Model 1              </td><td>     Model 2              </td></tr>
-<tr><td colspan=3><hr></td></tr>
-<tr><td>Weight (lbs.)       </td><td>     0.00136<sup>***</sup></td><td>     0.00126<sup>***</sup></td></tr>
-<tr><td>                    </td><td>      (6.09)              </td><td>      (6.06)              </td></tr>
-<tr><td>Gear Ratio          </td><td>       0.171              </td><td>      -0.337              </td></tr>
-<tr><td>                    </td><td>      (0.64)              </td><td>     (-1.19)              </td></tr>
-<tr><td>Turn Circle (ft.)   </td><td>      0.0243              </td><td>      0.0613              </td></tr>
-<tr><td>                    </td><td>      (0.70)              </td><td>      (1.81)              </td></tr>
-<tr><td>Car type            </td><td>                          </td><td>       0.865<sup>***</sup></td></tr>
-<tr><td>                    </td><td>                          </td><td>      (3.66)              </td></tr>
-<tr><td>Constant            </td><td>      -0.581              </td><td>      -0.466              </td></tr>
-<tr><td>                    </td><td>     (-0.38)              </td><td>     (-0.33)              </td></tr>
-<tr><td colspan=3><hr></td></tr>
-<tr><td>Observations        </td><td>          74              </td><td>          74              </td></tr>
-<tr><td colspan=3><hr></td></tr>
-<tr><td colspan=3>
-<i>t</i> statistics in parentheses
-<br /><sup>*</sup> <i>p</i> < 0.05, <sup>**</sup> <i>p</i> < 0.01, <sup>***</sup> <i>p</i> < 0.001
-</td></tr>
-</table>
-<p>The community-contributed <strong>esttab</strong> is available on the Boston College Statistical Software Components (SSC) archive; see <a href="https://www.stata.com/support/ssc-installation/">ssc install</a> for details.</p>
+<h2><a href="#references" id="references">References</a></h2>
+<ol>
+<li><a href="https://www.stata.com/features/overview/markdown/">Convert dynamic Markdown documents to Word or HTML</a></li>
+<li><a href="https://www.stata.com/manuals/rptdyndoc.pdf">dyndoc manual</a></li>
+<li><a href="https://www.stata.com/manuals/rptdynamictags.pdf#rptDynamictags">dynamic tags manual (Stata 16)</a></li>
+<li><a href="https://danbischof.com/2017/09/05/a-final-stata-gift-538-schemes/">scheme 538</a></li>
+<li><a href="https://daringfireball.net/projects/markdown/syntax">markdown reference</a></li>
+</ol>
