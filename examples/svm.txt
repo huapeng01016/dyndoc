@@ -5,24 +5,18 @@
 <link rel="stylesheet" type="text/css" href="stmarkdown.css">
 </head>
 
-<<dd_do>>
+<<dd_do: quietly>>
+cscript
+local percent 20
+local seed 12345
+
 version 16
 set linesize 80
 
 * check if Python and Python packages are available
-capture {
-	python which numpy
-	python which matplotlib
-	python which sklearn
-	python which junk
-}
-<</dd_do>>
-
-<<dd_do: nocommand>>
-if _rc {
-	display as error "matplotlib, sklearn, and numpy packages required"
-	error 601
-}
+python which numpy
+python which matplotlib
+python which sklearn
 <</dd_do>>
 
 # Using Support Vector Machine to classify car type in Stata's auto dataset
@@ -40,109 +34,84 @@ your current Python installation to run the following example.
 
 ~~~~
 <<dd_do>>
+set seed `seed'
 sysuse auto, clear
+gen train = 0
+replace train = 1 if runiform() < `percent'/100
+frame put if train==0, into(predict)
+keep if train==1
 <</dd_do>>
 ~~~~
 
-## Perform data transformation
-
-We generate a variable, **fuel**, that measures the fuel consumption rate in the unit of 
-Gallons per 100 Miles.  
-
-~~~~
+## Scatter plot of train data
+```stata
 <<dd_do>>
-generate fuel = 100/mpg
-label variable fuel "Fuel consumption (Gallons per 100 Miles)"
+python:
+import numpy as np
+from sfi import Platform
+import matplotlib
+if Platform.isWindows():
+	matplotlib.use('TkAgg')
+
+import matplotlib.pyplot as plt
+from sfi import Data
+import imageio as io
+import os
+from mpl_toolkits.mplot3d import Axes3D
+
+X = np.array(Data.get("foreign mpg price weight"))
+
+fig = plt.figure()
+ax = Axes3D(fig, elev=-155, azim=105)
+ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]<0.1, marker='o')
+plt.savefig("train_for.png")
+end
 <</dd_do>>
-~~~~
+```
 
-Gallons per 100 Mile is a better measurement than Miles per Gallon. Going 
-from a 10 Miles per Gallon car to a 20 Miles per Gallon 
-car saves 5 Gallons per 100 Miles when Miles per Gallon increases 10. Going 
-from a 20 Miles per Gallon car to a 40 Miles per Gallon car *only* saves 2.5 Gallons 
-per 100 Miles when Miles per Gallon increases 20.      
+![scatter train data](./train_for.png)
 
-## Examine the variables
-
-We examine variables for possible errors in the data.
-
-~~~~
+## Scatter plot of production data
+```stata
 <<dd_do>>
-describe fuel weight
-<</dd_do>>
-~~~~
+frame change predict
+python:
+import numpy as np
+from sfi import Platform
+import matplotlib
+if Platform.isWindows():
+	matplotlib.use('TkAgg')
 
-<<dd_do:quietly>>
-assert fuel > 0 
-<</dd_do>>
+import matplotlib.pyplot as plt
+from sfi import Data
+import imageio as io
+import os
+from mpl_toolkits.mplot3d import Axes3D
 
-~~~~
+X = np.array(Data.get("foreign mpg turn headroom"))
+
+fig = plt.figure()
+ax = Axes3D(fig, elev=-155, azim=105)
+ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]<0.1, marker='o')
+plt.savefig("production_for.png")
+end
+<</dd_do>>
+```
+
+![scatter train data](./production_for.png)
+
+## SVM
+```stata
 <<dd_do>>
-summarize weight
+frame change default
+pysvm2 foreign mpg turn headroom
+frame change predict
+pysvm2predict for2
+label values for2 origin
+tabulate foreign for2, nokey
 <</dd_do>>
-~~~~
+```
 
-The variable **weight** has minimum value <<dd_display: %4.2f `r(min)'>>, maximum value 
-<<dd_display: %4.2f `r(max)'>>, and range <<dd_display: %4.2f `r(max)'-`r(min)'>>.
-
-##  Plot fuel consumption and vehicle weight 
-
-<<dd_if:`has_g538'>>
-The graph is produced with  Daniel Bischof's *538* scheme. 
-
-~~~~
-<<dd_do>>
-twoway lfitci fuel weight || scatter fuel weight, mcolor(%20) scheme(538)
-<</dd_do>>
-~~~~
-<<dd_else>>
-The graph is produced with default *s2color* scheme. 
-
-~~~~
-<<dd_do>>
-twoway lfitci fuel weight || scatter fuel weight, mcolor(%20) scheme(s2color)
-<</dd_do>>
-~~~~
-<<dd_endif>>
-
-
-<<dd_graph: sav("sc_gp100m_mpg.png") alt("scatter fuel weight") replace markdown>>
-
-## Explore relationship between fuel consumption and vehicle weight - linear regression
-
-~~~~
-<<dd_do>>
-regress fuel weight
-<</dd_do>>
-~~~~
-
-<<dd_do:quietly>>
-matrix define eb = e(b)
-<</dd_do>>
-
-The regression shows that for every unit increase in weight, a 
-<<dd_display:%9.4f eb[1,1]>> unit increase in fuel consumption is predicted.
-
-## Produce an HTML table from regression results
-
-<<dd_do>>
-_coef_table, markdown
-<</dd_do>>
-
-## Produce a table from **estimates table**
-
-~~~~
-<<dd_do>>
-quietly regress fuel weight gear turn
-estimates store model1
-quietly regress fuel weight gear turn foreign
-estimates store model2
-<</dd_do>>
-~~~~
-
-<<dd_do>>
-estimates table model1 model2, varlabel b(%7.4f) stats(N r2_a) star markdown
-<</dd_do>>
 
 ## References 
 

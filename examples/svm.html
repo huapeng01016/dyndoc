@@ -1,0 +1,111 @@
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="stmarkdown.css">
+</head>
+<h1><a href="#using-support-vector-machine-to-classify-car-type-in-statas-auto-dataset" id="using-support-vector-machine-to-classify-car-type-in-statas-auto-dataset">Using Support Vector Machine to classify car type in Stata&rsquo;s auto dataset</a></h1>
+<p>In Stata 16, you can embed and execute Python code from within Stata. Stata&rsquo;s new <strong>python</strong> command provides a suite of subcommands allowing you to easily call Python from Stata and output Python results within Stata.</p>
+<p>We will build a classifier using the Support Vector Machine (SVM) classifier within the <strong>scikit-learn</strong> Python package to detect if a car in Stata&rsquo;s auto dataset is foreign or domestic built.</p>
+<p>Note that you need to install the Matplotlib, sklearn, and NumPy packages in your current Python installation to run the following example.</p>
+<pre><code>. set seed `seed'
+
+. sysuse auto, clear
+(1978 Automobile Data)
+
+. gen train = 0
+
+. replace train = 1 if runiform() &lt; `percent'/100
+(18 real changes made)
+
+. frame put if train==0, into(predict)
+
+. keep if train==1
+(56 observations deleted)
+
+</code></pre>
+<h2><a href="#scatter-plot-of-train-data" id="scatter-plot-of-train-data">Scatter plot of train data</a></h2>
+<pre><code class="language-stata">. python:
+----------------------------------------------- python (type end to exit) ------
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from sfi import Platform
+&gt;&gt;&gt; import matplotlib
+&gt;&gt;&gt; if Platform.isWindows():
+...         matplotlib.use('TkAgg')
+... 
+&gt;&gt;&gt; import matplotlib.pyplot as plt
+&gt;&gt;&gt; from sfi import Data
+&gt;&gt;&gt; import imageio as io
+&gt;&gt;&gt; import os
+&gt;&gt;&gt; from mpl_toolkits.mplot3d import Axes3D
+&gt;&gt;&gt; 
+&gt;&gt;&gt; X = np.array(Data.get(&quot;foreign mpg price weight&quot;))
+&gt;&gt;&gt; 
+&gt;&gt;&gt; fig = plt.figure()
+&gt;&gt;&gt; ax = Axes3D(fig, elev=-155, azim=105)
+&gt;&gt;&gt; ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]&lt;0.1, marker='o')
+&lt;mpl_toolkits.mplot3d.art3d.Path3DCollection object at 0x00000000377572B0&gt;
+&gt;&gt;&gt; plt.savefig(&quot;train_for.png&quot;)
+&gt;&gt;&gt; end
+--------------------------------------------------------------------------------
+
+</code></pre>
+<p><img src="./train_for.png" alt="scatter train data" /></p>
+<h2><a href="#scatter-plot-of-production-data" id="scatter-plot-of-production-data">Scatter plot of production data</a></h2>
+<pre><code class="language-stata">. frame change predict
+
+. python:
+----------------------------------------------- python (type end to exit) ------
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from sfi import Platform
+&gt;&gt;&gt; import matplotlib
+&gt;&gt;&gt; if Platform.isWindows():
+...         matplotlib.use('TkAgg')
+... 
+&gt;&gt;&gt; import matplotlib.pyplot as plt
+&gt;&gt;&gt; from sfi import Data
+&gt;&gt;&gt; import imageio as io
+&gt;&gt;&gt; import os
+&gt;&gt;&gt; from mpl_toolkits.mplot3d import Axes3D
+&gt;&gt;&gt; 
+&gt;&gt;&gt; X = np.array(Data.get(&quot;foreign mpg turn headroom&quot;))
+&gt;&gt;&gt; 
+&gt;&gt;&gt; fig = plt.figure()
+&gt;&gt;&gt; ax = Axes3D(fig, elev=-155, azim=105)
+&gt;&gt;&gt; ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]&lt;0.1, marker='o')
+&lt;mpl_toolkits.mplot3d.art3d.Path3DCollection object at 0x00000000401A6CF8&gt;
+&gt;&gt;&gt; plt.savefig(&quot;production_for.png&quot;)
+&gt;&gt;&gt; end
+--------------------------------------------------------------------------------
+
+</code></pre>
+<p><img src="./production_for.png" alt="scatter train data" /></p>
+<h2><a href="#svm" id="svm">SVM</a></h2>
+<pre><code class="language-stata">. frame change default
+
+. pysvm2 foreign mpg turn headroom
+note: training finished successfully
+
+. frame change predict
+
+. pysvm2predict for2
+
+. label values for2 origin
+
+. tabulate foreign for2, nokey
+
+           |         for2
+  Car type |  Domestic    Foreign |     Total
+-----------+----------------------+----------
+  Domestic |        38          2 |        40 
+   Foreign |        12          4 |        16 
+-----------+----------------------+----------
+     Total |        50          6 |        56 
+
+</code></pre>
+<h2><a href="#references" id="references">References</a></h2>
+<ol>
+<li><a href="https://www.stata.com/features/overview/markdown/">Convert dynamic Markdown documents to Word or HTML</a></li>
+<li><a href="https://www.stata.com/manuals/rptdyndoc.pdf">dyndoc manual</a></li>
+<li><a href="https://www.stata.com/manuals/rptdynamictags.pdf#rptDynamictags">dynamic tags manual (Stata 16)</a></li>
+<li><a href="https://danbischof.com/2017/09/05/a-final-stata-gift-538-schemes/">scheme 538</a></li>
+<li><a href="https://daringfireball.net/projects/markdown/syntax">markdown reference</a></li>
+</ol>

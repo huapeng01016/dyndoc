@@ -41,6 +41,6 @@ def dosvmpredict2(predict, select):
 	dim = y.shape[0]
 	j = y.shape[1]-1
 	for i in range(dim):
-		Data.storeAt(predict, y[i,0]-1, y[i,j])
+		Data.storeAt(predict, int(y[i,0]-1), int(y[i,j]))
 	
 end
