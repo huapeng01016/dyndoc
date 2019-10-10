@@ -5,22 +5,38 @@
 <link rel="stylesheet" type="text/css" href="stmarkdown.css">
 </head>
 
-<<dd_do: quietly>>
-version 15
+<<dd_do>>
+version 16
 set linesize 80
 
-capture quietly ssc describe g538schemes
-if _rc {
-	local has_g538 0
-}
-else {
-	local has_g538 1
+* check if Python and Python packages are available
+capture {
+	python which numpy
+	python which matplotlib
+	python which sklearn
+	python which junk
 }
 <</dd_do>>
 
-# A fuel consumption study of Stata's auto dataset
+<<dd_do: nocommand>>
+if _rc {
+	display as error "matplotlib, sklearn, and numpy packages required"
+	error 601
+}
+<</dd_do>>
 
-We conduct a study of the fuel consumption of cars in Stata's auto dataset. 
+# Using Support Vector Machine to classify car type in Stata's auto dataset
+
+In Stata 16, you can embed and execute Python code from within Stata. 
+Stata's new **python** command provides a suite of subcommands allowing you 
+to easily call Python from Stata and output Python results within Stata.
+
+We will build a classifier using the Support Vector Machine (SVM) classifier 
+within the **scikit-learn** Python package to detect if a car in Stata's 
+auto dataset is foreign or domestic built.
+
+Note that you need to install the Matplotlib, sklearn, and NumPy packages in 
+your current Python installation to run the following example. 
 
 ~~~~
 <<dd_do>>
