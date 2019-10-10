@@ -1,0 +1,43 @@
+
+We can process certain part of the dynamic document based on conditions.
+
+. local percent 20
+
+
+If local macro percent is 20, we use auto_20.dta, which is a 20 percent 
+sample of the auto dataset.
+
+. use auto_20, clear
+(1978 Automobile Data)
+
+. describe
+
+Contains data from auto_20.dta
+  obs:            18                          1978 Automobile Data
+ vars:            12                          9 Oct 2019 17:14
+                                              (_dta has notes)
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+make            str18   %-18s                 Make and Model
+price           int     %8.0gc                Price
+mpg             int     %8.0g                 Mileage (mpg)
+rep78           int     %8.0g                 Repair Record 1978
+headroom        float   %6.1f                 Headroom (in.)
+trunk           int     %8.0g                 Trunk space (cu. ft.)
+weight          int     %8.0gc                Weight (lbs.)
+length          int     %8.0g                 Length (in.)
+turn            int     %8.0g                 Turn Circle (ft.)
+displacement    int     %8.0g                 Displacement (cu. in.)
+gear_ratio      float   %6.2f                 Gear Ratio
+foreign         byte    %8.0g      origin     Car type
+--------------------------------------------------------------------------------
+Sorted by: foreign
+
+
+
+ - Mean price for foreign cars  :  7375
+
+ - Mean price for domestic cars :  6529
+
