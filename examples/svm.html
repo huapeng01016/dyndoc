@@ -23,62 +23,36 @@
 
 </code></pre>
 <h2><a href="#scatter-plot-of-train-data" id="scatter-plot-of-train-data">Scatter plot of train data</a></h2>
-<pre><code class="language-stata">. python:
------------------------------------------------ python (type end to exit) ------
-&gt;&gt;&gt; import numpy as np
-&gt;&gt;&gt; from sfi import Platform
-&gt;&gt;&gt; import matplotlib
-&gt;&gt;&gt; if Platform.isWindows():
-...         matplotlib.use('TkAgg')
-... 
-&gt;&gt;&gt; import matplotlib.pyplot as plt
-&gt;&gt;&gt; from sfi import Data
-&gt;&gt;&gt; import imageio as io
-&gt;&gt;&gt; import os
-&gt;&gt;&gt; from mpl_toolkits.mplot3d import Axes3D
-&gt;&gt;&gt; 
-&gt;&gt;&gt; X = np.array(Data.get(&quot;foreign mpg price weight&quot;))
-&gt;&gt;&gt; 
-&gt;&gt;&gt; fig = plt.figure()
-&gt;&gt;&gt; ax = Axes3D(fig, elev=-155, azim=105)
-&gt;&gt;&gt; ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]&lt;0.1, marker='o')
-&lt;mpl_toolkits.mplot3d.art3d.Path3DCollection object at 0x00000000377572B0&gt;
-&gt;&gt;&gt; plt.savefig(&quot;train_for.png&quot;)
-&gt;&gt;&gt; end
---------------------------------------------------------------------------------
+<p>We produce a 3d scatter plot of the trainning data. The points are color coded for different type (foreign or domestic).</p>
+<pre><code>python:
+import numpy as np
+from sfi import Platform
+import matplotlib
+if Platform.isWindows():
+	matplotlib.use('TkAgg')
 
+import matplotlib.pyplot as plt
+from sfi import Data
+import imageio as io
+import os
+from mpl_toolkits.mplot3d import Axes3D
+
+X = np.array(Data.get(&quot;foreign mpg price weight&quot;))
+
+fig = plt.figure()
+ax = Axes3D(fig, elev=-155, azim=105)
+ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]&lt;0.1, marker='o')
+plt.savefig(&quot;train_for.png&quot;)
+plt.close()
+end
 </code></pre>
+<pre><code></code></pre>
 <p><img src="./train_for.png" alt="scatter train data" /></p>
 <h2><a href="#scatter-plot-of-production-data" id="scatter-plot-of-production-data">Scatter plot of production data</a></h2>
-<pre><code class="language-stata">. frame change predict
-
-. python:
------------------------------------------------ python (type end to exit) ------
-&gt;&gt;&gt; import numpy as np
-&gt;&gt;&gt; from sfi import Platform
-&gt;&gt;&gt; import matplotlib
-&gt;&gt;&gt; if Platform.isWindows():
-...         matplotlib.use('TkAgg')
-... 
-&gt;&gt;&gt; import matplotlib.pyplot as plt
-&gt;&gt;&gt; from sfi import Data
-&gt;&gt;&gt; import imageio as io
-&gt;&gt;&gt; import os
-&gt;&gt;&gt; from mpl_toolkits.mplot3d import Axes3D
-&gt;&gt;&gt; 
-&gt;&gt;&gt; X = np.array(Data.get(&quot;foreign mpg turn headroom&quot;))
-&gt;&gt;&gt; 
-&gt;&gt;&gt; fig = plt.figure()
-&gt;&gt;&gt; ax = Axes3D(fig, elev=-155, azim=105)
-&gt;&gt;&gt; ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]&lt;0.1, marker='o')
-&lt;mpl_toolkits.mplot3d.art3d.Path3DCollection object at 0x00000000401A6CF8&gt;
-&gt;&gt;&gt; plt.savefig(&quot;production_for.png&quot;)
-&gt;&gt;&gt; end
---------------------------------------------------------------------------------
-
-</code></pre>
+<p>Now We produce the same 3d scatter plot for the prediction data.</p>
 <p><img src="./production_for.png" alt="scatter train data" /></p>
 <h2><a href="#svm" id="svm">SVM</a></h2>
+<p>Now we train the SVM classifier using the trainning data, then predict the type using the prediction data.</p>
 <pre><code class="language-stata">. frame change default
 
 . pysvm2 foreign mpg turn headroom
@@ -103,9 +77,6 @@ note: training finished successfully
 </code></pre>
 <h2><a href="#references" id="references">References</a></h2>
 <ol>
-<li><a href="https://www.stata.com/features/overview/markdown/">Convert dynamic Markdown documents to Word or HTML</a></li>
-<li><a href="https://www.stata.com/manuals/rptdyndoc.pdf">dyndoc manual</a></li>
-<li><a href="https://www.stata.com/manuals/rptdynamictags.pdf#rptDynamictags">dynamic tags manual (Stata 16)</a></li>
-<li><a href="https://danbischof.com/2017/09/05/a-final-stata-gift-538-schemes/">scheme 538</a></li>
-<li><a href="https://daringfireball.net/projects/markdown/syntax">markdown reference</a></li>
+<li><a href="https://www.stata.com/new-in-stata/python-integration/">Python integration in Stata 16</a></li>
+<li><a href="https://huapeng01016.github.io/chicago19/#/upgrade">pysvm2 and pysvm2predict</a></li>
 </ol>
