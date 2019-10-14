@@ -35,15 +35,20 @@ import matplotlib.pyplot as plt
 from sfi import Data
 import imageio as io
 import os
-from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits import mplot3d
 
 X = np.array(Data.get(&quot;foreign mpg price weight&quot;))
 
-fig = plt.figure()
-ax = Axes3D(fig, elev=-155, azim=105)
-ax.scatter(X[:, 1], X[:,2], X[:, 3], c=X[:,0]&lt;0.1, marker='o')
+
+ax = plt.axes(projection='3d')
+plt.xticks([10, 20, 30, 40])
+plt.yticks([3000, 6000, 9000, 12000, 15000, 18000])
+plt.zticks([1500, 2500, 3500, 4500, 5500])
+ax.scatter(X[:,1], X[:,2],X[:, 3], c=X[:,0]&lt;0.1, marker='o')
+
 plt.savefig(&quot;train_for.png&quot;)
 plt.close()
+
 end
 </code></pre>
 <pre><code></code></pre>

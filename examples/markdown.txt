@@ -87,7 +87,7 @@ Ordered
 | AMC Spirit             |3,799   | 22       | 2,640         |
 | Buick Century          |4,816   | 20       | 3,250         |
 | Buick Electra          |7,827   | 15       | 4,080         |
-| Averge Weight:         |||                  **3,250**      |
+| Average Weight:        |||                  **3,250**      |
 
 
 ## Images
