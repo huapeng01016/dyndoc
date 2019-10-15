@@ -35,20 +35,20 @@ import matplotlib.pyplot as plt
 from sfi import Data
 import imageio as io
 import os
-from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d import Axes3D
 
-X = np.array(Data.get(&quot;foreign mpg price weight&quot;))
+X = np.array(Data.get(&quot;foreign mpg turn headroom&quot;))
 
+fig = plt.figure(1, figsize=(6, 6))
+ax = Axes3D(fig)
+ax.scatter(X[:, 1], X[:, 2], X[:, 3], c=X[:, 0]&lt;0.1, s=30)
 
-ax = plt.axes(projection='3d')
-plt.xticks([10, 20, 30, 40])
-plt.yticks([3000, 6000, 9000, 12000, 15000, 18000])
-plt.zticks([1500, 2500, 3500, 4500, 5500])
-ax.scatter(X[:,1], X[:,2],X[:, 3], c=X[:,0]&lt;0.1, marker='o')
+ax.set_xlabel(&quot;Mileage (mpg)&quot;)
+ax.set_ylabel(&quot;Trunk space (cu. ft.)&quot;)
+ax.set_zlabel(&quot;Headroom (in.)&quot;)
 
 plt.savefig(&quot;train_for.png&quot;)
 plt.close()
-
 end
 </code></pre>
 <pre><code></code></pre>
@@ -65,13 +65,13 @@ note: training finished successfully
 
 . frame change predict
 
-. pysvm2predict for2
+. pysvm2predict foreign_pred
 
-. label values for2 origin
+. label values foreign_pred origin
 
-. tabulate foreign for2, nokey
+. tabulate foreign foreign_pred, nokey
 
-           |         for2
+           |     foreign_pred
   Car type |  Domestic    Foreign |     Total
 -----------+----------------------+----------
   Domestic |        38          2 |        40 

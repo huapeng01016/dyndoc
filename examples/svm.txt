@@ -6,7 +6,7 @@
 </head>
 
 <<dd_do: quietly>>
-cscript
+clear all
 if "`0'" != "" {
 	local 0 ", `0'"
 	syntax [, percent(interger 20)] 
@@ -71,20 +71,20 @@ import matplotlib.pyplot as plt
 from sfi import Data
 import imageio as io
 import os
-from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d import Axes3D
 
-X = np.array(Data.get("foreign mpg price weight"))
+X = np.array(Data.get("foreign mpg turn headroom"))
 
+fig = plt.figure(1, figsize=(6, 6))
+ax = Axes3D(fig)
+ax.scatter(X[:, 1], X[:, 2], X[:, 3], c=X[:, 0]<0.1, s=30)
 
-ax = plt.axes(projection='3d')
-plt.xticks([10, 20, 30, 40])
-plt.yticks([3000, 6000, 9000, 12000, 15000, 18000])
-plt.zticks([1500, 2500, 3500, 4500, 5500])
-ax.scatter(X[:,1], X[:,2],X[:, 3], c=X[:,0]<0.1, marker='o')
+ax.set_xlabel("Mileage (mpg)")
+ax.set_ylabel("Trunk space (cu. ft.)")
+ax.set_zlabel("Headroom (in.)")
 
 plt.savefig("train_for.png")
 plt.close()
-
 end
 ```
 
@@ -101,15 +101,17 @@ import matplotlib.pyplot as plt
 from sfi import Data
 import imageio as io
 import os
-from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d import Axes3D
 
-X = np.array(Data.get("foreign mpg price weight"))
+X = np.array(Data.get("foreign mpg turn headroom"))
 
+fig = plt.figure(1, figsize=(6, 6))
+ax = Axes3D(fig)
+ax.scatter(X[:, 1], X[:, 2], X[:, 3], c=X[:, 0]<0.1, s=30)
 
-ax = plt.axes(projection='3d')
-plt.xticks([15, 25, 35])
-plt.yticks([5000, 8000, 11000, 14000])
-ax.scatter(X[:,1], X[:,2],X[:, 3], c=X[:,0]<0.1, marker='o')
+ax.set_xlabel("Mileage (mpg)")
+ax.set_ylabel("Trunk space (cu. ft.)")
+ax.set_zlabel("Headroom (in.)")
 
 plt.savefig("train_for.png")
 plt.close()
@@ -136,14 +138,17 @@ import matplotlib.pyplot as plt
 from sfi import Data
 import imageio as io
 import os
-from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d import Axes3D
 
-X = np.array(Data.get("foreign mpg price weight"))
+X = np.array(Data.get("foreign mpg turn headroom"))
 
-ax = plt.axes(projection='3d')
-plt.xticks([15, 25, 35])
-plt.yticks([5000, 8000, 11000, 14000])
-ax.scatter(X[:,1], X[:,2],X[:, 3], c=X[:,0]<0.1, marker='o')
+fig = plt.figure(1, figsize=(6, 6))
+ax = Axes3D(fig)
+ax.scatter(X[:, 1], X[:, 2], X[:, 3], c=X[:, 0]<0.1, s=30)
+
+ax.set_xlabel("Mileage (mpg)")
+ax.set_ylabel("Trunk space (cu. ft.)")
+ax.set_zlabel("Headroom (in.)")
 
 plt.savefig("production_for.png")
 plt.close()
@@ -162,9 +167,9 @@ using the prediction data.
 frame change default
 pysvm2 foreign mpg turn headroom
 frame change predict
-pysvm2predict for2
-label values for2 origin
-tabulate foreign for2, nokey
+pysvm2predict foreign_pred
+label values foreign_pred origin
+tabulate foreign foreign_pred, nokey
 <</dd_do>>
 ```
 
