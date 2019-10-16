@@ -173,6 +173,15 @@ tabulate foreign foreign_pred, nokey
 <</dd_do>>
 ```
 
+<<dd_do:quietly>>
+count
+local rn = r(N)
+count if foreign == foreign_pred
+local rcorrect = r(N)
+<</dd_do>>
+
+The percentage of correctly identified cars is <<dd_display: %5.2f `rcorrect'*100/`rn'>>\%.
+
 ## References 
 
 1. [Python integration in Stata 16](https://www.stata.com/new-in-stata/python-integration/)
